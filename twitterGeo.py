@@ -11,7 +11,7 @@ consumer_secret = "DpfkvmXmcy23PReWBVZEUziFRSjo9ZxClMGY6MIpiTmtajl8cS"
 
 
 #twitter listener
-class StdOutListener(StreamListener):
+class twitterListener(StreamListener):
 
     def on_data(self, data):
         decoded = json.loads(data)
@@ -42,7 +42,7 @@ class StdOutListener(StreamListener):
 if __name__ == '__main__':
 
     #Authentication and connection to twitter API
-    l = StdOutListener()
+    l = twitterListener()
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
