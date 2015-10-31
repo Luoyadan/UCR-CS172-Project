@@ -17,22 +17,12 @@ class twitterListener(StreamListener):
         decoded = json.loads(data)
 
         if decoded.has_key('user'):
-            #gets username
-            username = unicode(decoded['user']['screen_name'])
-            #print username
+            username = unicode(decoded['user']['screen_name']) #gets username
+            userTweet = unicode(decoded['text'].encode('ascii', 'ignore')) #gets tweet
+            userTweetTime = unicode(decoded['created_at']) #gets timestamp
+            userLocation = unicode(decoded['user']['location']) #gets location
+            userCoords = unicode(decoded['coordinates']) #gets coordinates
 
-            #gets tweet
-            userTweet = unicode(decoded['text'].encode('ascii', 'ignore'))
-            #print userTweet
-
-            #gets location
-            '''
-            if data['coordinates'] == None:
-                print "no geotag"
-            else:
-                coord = unicode(data['coordinates']['coordinates']).encode("ascii","ignore")
-                print coord
-            '''
         return True
 
     def on_error(self, status):
