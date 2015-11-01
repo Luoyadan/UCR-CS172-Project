@@ -10,7 +10,7 @@ consumer_key = "8uzP5HaulOr2a5z9WUOiegkqf"
 consumer_secret = "DpfkvmXmcy23PReWBVZEUziFRSjo9ZxClMGY6MIpiTmtajl8cS"
 
 f = open('data/twitter_data.txt', 'w')
-
+hashtags = []
 
 #twitter listener
 class twitterListener(StreamListener):
@@ -24,14 +24,20 @@ class twitterListener(StreamListener):
         userTweetTime = unicode(decoded['created_at']) #gets timestamp
         userLocation = unicode(decoded['user']['location']).encode("ascii","ignore")  #gets location
         userCoords = unicode(decoded['coordinates']) #gets coordinates
-        userHashtags = unicode(decoded['entities']['hashtags'])
-        '''
+
+        userData = userTweetTime + " @" + username + ": " + userTweet + " Hashtags: "
+
+        #Loops through the list of hashtags and adds them to userData
+        userHashtags = decoded['entities']['hashtags']
+        tmp = decoded['text']
         for Hashtags in userHashtags:
             userHashtags = Hashtags['text']
-            print decoded['text'] + str(userHashtags)
-        '''
-        userData = userTweetTime + " @" + username + ": " + userTweet
+            userData += userHashtags
+            
+            
+        userData += "\n"
         print userData
+
         f.write(userData)
 
         
