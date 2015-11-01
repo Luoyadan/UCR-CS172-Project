@@ -34,16 +34,11 @@ class twitterListener(StreamListener):
             userHashtags = Hashtags['text']
             userData += userHashtags
             
-            
         userData += "\n"
         print userData
-
         f.write(userData)
 
-        
        # userURLS = unicode(decoded['entities']['urls'])
-        #print userHashtags
-       # print userURLS
         
         return True
 
