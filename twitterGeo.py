@@ -2,6 +2,7 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 import json
+import os
 
 #twitter credentials
 access_token = "4071886992-bnHpHdKy7yOJVrnotHFs5APG1QC4gurgi9Gc5LU"
@@ -9,19 +10,25 @@ access_token_secret = "zfR4t6WM2Zmf5185uW3aJ6xxqnth8lwZYMoBNtvsPypDR"
 consumer_key = "8uzP5HaulOr2a5z9WUOiegkqf"
 consumer_secret = "DpfkvmXmcy23PReWBVZEUziFRSjo9ZxClMGY6MIpiTmtajl8cS"
 
+#Open File
+print 'opening file'
+tweets_data_path = 'data/twitter_data.txt'
+file = open(tweets_data_path, "a+")
 
 #twitter listener
 class twitterListener(StreamListener):
 
     def on_data(self, data):
         decoded = json.loads(data)
-
         if decoded.has_key('user'):
-            username = unicode(decoded['user']['screen_name']) #gets username
+            username = unicode(decoded['user']['screen_name']).encode("ascii","ignore") #gets username
             userTweet = unicode(decoded['text'].encode('ascii', 'ignore')) #gets tweet
             userTweetTime = unicode(decoded['created_at']) #gets timestamp
-            userLocation = unicode(decoded['user']['location']) #gets location
+            userLocation = unicode(decoded['user']['location']).encode("ascii","ignore")#gets location
             userCoords = unicode(decoded['coordinates']) #gets coordinates
+            
+
+            print >>file, "%s,%s,%s,%s, |%s|," % (username, userTweet, userTweetTime, userLocation, userCoords)
 
         return True
 
@@ -37,8 +44,7 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
 
-    tweets_data_path = '../data/twitter_data.txt'
 
     #Filters twitter search with 'programming'
     stream = Stream(auth, l)
-    stream.filter(track=['programming'])
+    stream.filter(track=['tweet'], languages=["en"])
