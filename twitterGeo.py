@@ -19,10 +19,10 @@ class twitterListener(StreamListener):
         decoded = json.loads(data)
 
 
-        username = unicode(decoded['user']['screen_name']) #gets username
+        username = unicode(decoded['user']['screen_name']).encode("ascii","ignore")  #gets username
         userTweet = unicode(decoded['text'].encode('ascii', 'ignore')) #gets tweet
         userTweetTime = unicode(decoded['created_at']) #gets timestamp
-        userLocation = unicode(decoded['user']['location']) #gets location
+        userLocation = unicode(decoded['user']['location']).encode("ascii","ignore")  #gets location
         userCoords = unicode(decoded['coordinates']) #gets coordinates
         userHashtags = unicode(decoded['entities']['hashtags'])
         '''
