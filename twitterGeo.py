@@ -18,11 +18,22 @@ class twitterListener(StreamListener):
 
         if decoded.has_key('user'):
             username = unicode(decoded['user']['screen_name']) #gets username
+            print username
             userTweet = unicode(decoded['text'].encode('ascii', 'ignore')) #gets tweet
+            print userTweet
             userTweetTime = unicode(decoded['created_at']) #gets timestamp
             userLocation = unicode(decoded['user']['location']) #gets location
+            #print userLocation
             userCoords = unicode(decoded['coordinates']) #gets coordinates
+            print userCoords
+            print "\n"
 
+        '''
+        userHashtags = unicode(decoded['entities']['hashtags'])
+        userURLS = unicode(decoded['entities']['urls'])
+        print userHashtags
+        print userURLS
+        '''
         return True
 
     def on_error(self, status):
@@ -30,6 +41,9 @@ class twitterListener(StreamListener):
 
 
 if __name__ == '__main__':
+
+    lat = 34.0422
+    lng = -118.2437
 
     #Authentication and connection to twitter API
     l = twitterListener()
@@ -41,4 +55,4 @@ if __name__ == '__main__':
 
     #Filters twitter search with 'programming'
     stream = Stream(auth, l)
-    stream.filter(track=['programming'])
+    stream.filter(locations=[-122.75,36.8,-121.75,37.8]) #filter tweets to be in the San Francisco area
