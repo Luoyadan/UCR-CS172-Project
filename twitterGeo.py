@@ -2,10 +2,11 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 
-from tweepy.streaming import StreamListener
-from tweepy import OAuthHandler
-from tweepy import Stream
 import json
+from urllib2 import urlopen
+from lxml.html import parse
+
+
 
 #twitter credentials
 access_token = "4071886992-bnHpHdKy7yOJVrnotHFs5APG1QC4gurgi9Gc5LU"
@@ -28,7 +29,7 @@ class twitterListener(StreamListener):
         userTweetTime = unicode(decoded['created_at']) #gets timestamp
         userLocation = unicode(decoded['user']['location']).encode("ascii","ignore")  #gets location
         userCoords = unicode(decoded['coordinates']) #gets coordinates
-
+        userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")
         userData = userTweetTime + " @" + username + ": " + userTweet + " Hashtags: "
 
         #Loops through the list of hashtags and adds them to userData
@@ -38,12 +39,22 @@ class twitterListener(StreamListener):
             userHashtags = Hashtags['text']
             userData += userHashtags
             
+        #url
+        if userURLS != "[]":
+            expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii", "ignore")
+            userData += " URL: "
+            userData += expanded_url
+            page = urlopen(expanded_url)
+            p = parse(page)
+            pageTitle = p.find(".//title").text
+            userData += " Page-title: " 
+            userData += pageTitle
+
         userData += "\n"
         print userData
         f.write(userData)
 
-       # userURLS = unicode(decoded['entities']['urls'])
-        
+
         return True
 
     def on_error(self, status):
@@ -58,6 +69,5 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
 
-    stream = Stream(auth, l)
-    stream.filter(locations=[-122.75,36.8,-121.75,37.8]) #filter tweets to be in the San Francisco area
+    stream.filter(locations=[-122.75,36.8,-121.75,37.8], languages=["en"]) #filter tweets to be in the San Francisco area
     f.close()
