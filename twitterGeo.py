@@ -3,7 +3,7 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 
 import json
-from urllib2 import urlopen
+import urllib2
 from lxml.html import parse
 
 
@@ -25,11 +25,11 @@ class twitterListener(StreamListener):
 
 
         username = unicode(decoded['user']['screen_name']).encode("ascii","ignore")  #gets username
-        userTweet = unicode(decoded['text'].encode('ascii', 'ignore')) #gets tweet
+        userTweet = unicode(decoded['text']).encode("ascii","ignore") #gets tweet
         userTweetTime = unicode(decoded['created_at']) #gets timestamp
-        userLocation = unicode(decoded['user']['location']).encode("ascii","ignore")  #gets location
+        userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location
         userCoords = unicode(decoded['coordinates']) #gets coordinates
-        userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")
+        userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")#get URLS 
         userData = userTweetTime + " @" + username + ": " + userTweet + " Hashtags: "
 
         #Loops through the list of hashtags and adds them to userData
@@ -41,14 +41,26 @@ class twitterListener(StreamListener):
             
         #url
         if userURLS != "[]":
-            expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii", "ignore")
+            expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii","ignore")
             userData += " URL: "
             userData += expanded_url
-            page = urlopen(expanded_url)
-            p = parse(page)
-            pageTitle = p.find(".//title").text
-            userData += " Page-title: " 
-            userData += pageTitle
+            
+            try:
+                page = urllib2.urlopen(expanded_url)
+                p = parse(page)
+                pageTitle = p.find(".//title").text
+                userData += " Page-title: " 
+                userData += pageTitle
+            except urllib2.HTTPError, err:
+                if err.code == 404:
+                    print "Page not found!"
+                elif err.code == 403:
+                    print "Access denied!"
+                else:
+                    print "Error:", err.code
+            except urllib2.URLError, err:
+                print "URL error:", err.reason
+
 
         userData += "\n"
         print userData
