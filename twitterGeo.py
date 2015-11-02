@@ -43,7 +43,7 @@ class twitterListener(StreamListener):
             userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location as per profile, not of the specific tweet
             userCoords = unicode(decoded['coordinates']).encode("ascii","ignore") #gets coordinates, will be 'None' if they have disable location services
             userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")#get URLS 
-            userData = userTweetTime +  " @" + username + ": " + userTweet + " Hashtags: " 
+            userData = userTweetTime +  " Coords: " + userCoords[36:-1] + " @" + username + ": " + userTweet + " Hashtags: " 
 
             #Loops through the list of hashtags and adds them to userData
             userHashtags = decoded['entities']['hashtags']
