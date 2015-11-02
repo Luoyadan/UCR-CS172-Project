@@ -27,18 +27,18 @@ class twitterListener(StreamListener):
         username = unicode(decoded['user']['screen_name']).encode("ascii","ignore")  #gets username
         userTweet = unicode(decoded['text']).encode("ascii","ignore") #gets tweet
         userTweetTime = unicode(decoded['created_at']) #gets timestamp
-        userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location
-        userCoords = unicode(decoded['coordinates']) #gets coordinates
+        userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location as per profile, not of the specific tweet
+        userCoords = unicode(decoded['coordinates']).encode("ascii","ignore") #gets coordinates, will be 'None' if they have disable location services
         userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")#get URLS 
-        userData = userTweetTime + " @" + username + ": " + userTweet + " Hashtags: "
+        userData = userTweetTime +  " @" + username + ": " + userTweet + " Hashtags: " 
 
         #Loops through the list of hashtags and adds them to userData
         userHashtags = decoded['entities']['hashtags']
         tmp = decoded['text']
         for Hashtags in userHashtags:
             userHashtags = Hashtags['text']
-            userData += userHashtags
-            
+            userData += userHashtags + " "
+        
         #url
         if userURLS != "[]":
             expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii","ignore")
@@ -48,7 +48,7 @@ class twitterListener(StreamListener):
             try:
                 page = urllib2.urlopen(expanded_url)
                 p = parse(page)
-                pageTitle = p.find(".//title").text
+                pageTitle = p.find(".//title").text.encode("ascii","ignore")
                 userData += " Page-title: " 
                 userData += pageTitle
             except urllib2.HTTPError, err:
@@ -61,7 +61,7 @@ class twitterListener(StreamListener):
             except urllib2.URLError, err:
                 print "URL error:", err.reason
 
-
+            
         userData += "\n"
         print userData
         f.write(userData)
