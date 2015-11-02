@@ -1,12 +1,21 @@
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
+import sys
+import argparse
 
 import json
 import urllib2
 from lxml.html import parse
 
-
+#arguments
+outputPath = str(sys.argv[1])
+'''
+boundLat1 = float(sys.argv[2])
+boundLong1 = float(sys.argv[3])
+boundLat2 = float(sys.argv[4])
+boundLong2 = float(sys.argv[5])
+'''
 
 #twitter credentials
 access_token = "4071886992-bnHpHdKy7yOJVrnotHFs5APG1QC4gurgi9Gc5LU"
@@ -14,7 +23,7 @@ access_token_secret = "zfR4t6WM2Zmf5185uW3aJ6xxqnth8lwZYMoBNtvsPypDR"
 consumer_key = "8uzP5HaulOr2a5z9WUOiegkqf"
 consumer_secret = "DpfkvmXmcy23PReWBVZEUziFRSjo9ZxClMGY6MIpiTmtajl8cS"
 
-f = open('data/twitter_data.txt', 'w')
+f = open(outputPath, 'w')
 hashtags = []
 
 #twitter listener
@@ -27,18 +36,18 @@ class twitterListener(StreamListener):
         username = unicode(decoded['user']['screen_name']).encode("ascii","ignore")  #gets username
         userTweet = unicode(decoded['text']).encode("ascii","ignore") #gets tweet
         userTweetTime = unicode(decoded['created_at']) #gets timestamp
-        userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location
-        userCoords = unicode(decoded['coordinates']) #gets coordinates
+        userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location as per profile, not of the specific tweet
+        userCoords = unicode(decoded['coordinates']).encode("ascii","ignore") #gets coordinates, will be 'None' if they have disable location services
         userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")#get URLS 
-        userData = userTweetTime + " @" + username + ": " + userTweet + " Hashtags: "
+        userData = userTweetTime +  " @" + username + ": " + userTweet + " Hashtags: " 
 
         #Loops through the list of hashtags and adds them to userData
         userHashtags = decoded['entities']['hashtags']
         tmp = decoded['text']
         for Hashtags in userHashtags:
             userHashtags = Hashtags['text']
-            userData += userHashtags
-            
+            userData += userHashtags + " "
+        
         #url
         if userURLS != "[]":
             expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii","ignore")
@@ -48,7 +57,7 @@ class twitterListener(StreamListener):
             try:
                 page = urllib2.urlopen(expanded_url)
                 p = parse(page)
-                pageTitle = p.find(".//title").text
+                pageTitle = p.find(".//title").text.encode("ascii","ignore")
                 userData += " Page-title: " 
                 userData += pageTitle
             except urllib2.HTTPError, err:
@@ -61,7 +70,7 @@ class twitterListener(StreamListener):
             except urllib2.URLError, err:
                 print "URL error:", err.reason
 
-
+            
         userData += "\n"
         print userData
         f.write(userData)
@@ -81,5 +90,7 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
 
+    #-122.75,36.8,-121.75,37.8 SF
+    #stream.filter(locations=[boundLong1,boundLat1,boundLong2,boundLat2], languages=["en"]) #filter tweets to be in the San Francisco area
     stream.filter(locations=[-122.75,36.8,-121.75,37.8], languages=["en"]) #filter tweets to be in the San Francisco area
     f.close()
