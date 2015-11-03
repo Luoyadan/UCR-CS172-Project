@@ -15,8 +15,6 @@ from lxml.html import parse
 dirName = str(sys.argv[2]) #data path
 numTweets = int(sys.argv[1]) #num of tweets 
 
-print dirName
-print numTweets
 #twitter credentials
 access_token = "4071886992-bnHpHdKy7yOJVrnotHFs5APG1QC4gurgi9Gc5LU"
 access_token_secret = "zfR4t6WM2Zmf5185uW3aJ6xxqnth8lwZYMoBNtvsPypDR"
@@ -31,7 +29,7 @@ outputPath += 'twitter_data'
 outputPath += str(filecnt)
 outputPath += '.txt'
 f = open(outputPath, 'w')
-hashtags = []
+chkFlag = True
 
 
 #twitter listener
@@ -41,14 +39,16 @@ class twitterListener(StreamListener):
         global f
         global filecnt
         global tweetcnt
+        global chkFlag
 
         #checks num of tweet parameter
         if tweetcnt >= numTweets and numTweets != 0:
-            f.close()
-            sys.exit()
+            chkFlag = False
+            return False
 
         #Ends when files reach 5GB in total size
         if (filecnt >= 500):
+            chkFlag = False
             return False
 
         #Create a new text file every 10MB
@@ -135,7 +135,10 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
 
-    #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
-    stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
-
+    while chkFlag != False:
+        try:
+            #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
+            stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
+        except:
+            continue
     f.close()
