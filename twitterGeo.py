@@ -39,11 +39,14 @@ hashtags = []
 #twitter listener
 class twitterListener(StreamListener):
     
-
     def on_data(self, data):
         global f
         global filecnt
         global tweetcnt
+
+        #Ends when files reach 5GB in total size
+        if (filecnt >= 500):
+            return False
 
         #Create a new text file every 10MB
         if (f.tell() >= 10485760):
