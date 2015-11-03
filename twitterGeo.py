@@ -95,5 +95,5 @@ if __name__ == '__main__':
 
     #-122.75,36.8,-121.75,37.8 SF
     #stream.filter(locations=[boundLong1,boundLat1,boundLong2,boundLat2], languages=["en"]) #filter tweets to be in the San Francisco area
-    stream.filter(locations=[-122.75,36.8,-121.75,37.8], languages=["en"]) #filter tweets to be in the San Francisco area
+    stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
     f.close()
