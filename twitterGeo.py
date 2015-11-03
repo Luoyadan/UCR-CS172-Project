@@ -29,7 +29,7 @@ outputPath += 'twitter_data'
 outputPath += str(filecnt)
 outputPath += '.txt'
 f = open(outputPath, 'w')
-hashtags = []
+chkFlag = True
 
 
 #twitter listener
@@ -39,14 +39,16 @@ class twitterListener(StreamListener):
         global f
         global filecnt
         global tweetcnt
+        global chkFlag
 
         #checks num of tweet parameter
         if tweetcnt >= numTweets and numTweets != 0:
-            f.close()
-            sys.exit()
+            chkFlag = False
+            return False
 
         #Ends when files reach 5GB in total size
         if (filecnt >= 500):
+            chkFlag = False
             return False
 
         #Create a new text file every 10MB
@@ -133,7 +135,7 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
 
-    while True:
+    while chkFlag != False:
         try:
             #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
             stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
