@@ -9,8 +9,11 @@ import json
 import urllib2
 from lxml.html import parse
 
+import threading
+import time
+
 #arguments
-outputPath = str(sys.argv[1])
+fileName = str(sys.argv[1])
 '''
 boundLat1 = float(sys.argv[2])
 boundLong1 = float(sys.argv[3])
@@ -24,15 +27,32 @@ access_token_secret = "zfR4t6WM2Zmf5185uW3aJ6xxqnth8lwZYMoBNtvsPypDR"
 consumer_key = "8uzP5HaulOr2a5z9WUOiegkqf"
 consumer_secret = "DpfkvmXmcy23PReWBVZEUziFRSjo9ZxClMGY6MIpiTmtajl8cS"
 
-f = open(outputPath, 'w')
+filecnt = 0
+outputFile = fileName
+outputFile += str(filecnt)
+outputFile += '.txt'
+f = open(outputFile, 'w')
 hashtags = []
 
-filecnt = 2
 
 #twitter listener
 class twitterListener(StreamListener):
+    
 
     def on_data(self, data):
+        global f
+        global filecnt
+
+        #Create a new text file every 10MB
+        if (f.tell() >= 10485760):
+            f.close()
+            filecnt += 1
+            outputFile = fileName
+            outputFile += str(filecnt)
+            outputFile += '.txt'
+            f = open(outputFile, 'w')
+
+        
         decoded = json.loads(data)  
 
         #Checks geo enable and if there is coordinates
@@ -74,7 +94,7 @@ class twitterListener(StreamListener):
                 except urllib2.URLError, err:
                     print "URL error:", err.reason
 
-                
+            print 'F.size = ', f.tell()    
             userData += "\n"
             print userData
             f.write(userData)
@@ -96,4 +116,5 @@ if __name__ == '__main__':
     #-122.75,36.8,-121.75,37.8 SF
     #stream.filter(locations=[boundLong1,boundLat1,boundLong2,boundLat2], languages=["en"]) #filter tweets to be in the San Francisco area
     stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
+
     f.close()
