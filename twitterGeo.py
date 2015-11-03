@@ -133,7 +133,10 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
 
-    #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
-    stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
-
+    while True:
+        try:
+            #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
+            stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
+        except:
+            continue
     f.close()
