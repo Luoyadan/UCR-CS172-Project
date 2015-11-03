@@ -7,6 +7,7 @@ import argparse
 
 import json
 import urllib2
+from httplib import BadStatusLine
 from lxml.html import parse
 
 
@@ -71,27 +72,35 @@ class twitterListener(StreamListener):
             userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location as per profile, not of the specific tweet
             userCoords = unicode(decoded['coordinates']).encode("ascii","ignore") #gets coordinates, will be 'None' if they have disable location services
             userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")#get URLS 
-            userData = userTweetTime +  " Coords: " + userCoords[36:-1] + " @" + username + ": " + userTweet + " Hashtags: " 
+            userData = "Date:" + userTweetTime +  " Coords: " + userCoords[36:-1] + " @" + username + ": " + userTweet  
 
             #Loops through the list of hashtags and adds them to userData
             userHashtags = decoded['entities']['hashtags']
-            tmp = decoded['text']
-            for Hashtags in userHashtags:
-                userHashtags = Hashtags['text']
-                userData += userHashtags + " "
+            if (userHashtags != "[]"):
+                userData += " Hashtags: "
+                tmp = decoded['text']
+                for Hashtags in userHashtags:
+                    userHashtags = unicode(Hashtags['text']).encode("ascii","ignore")
+                    userData += userHashtags + " "
             
             #url
             if userURLS != "[]":
                 expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii","ignore")
                 userData += " URL: "
                 userData += expanded_url
-                
+                pageTitle = None
+
                 try:
                     page = urllib2.urlopen(expanded_url)
                     p = parse(page)
-                    pageTitle = p.find(".//title").text.encode("ascii","ignore")
-                    userData += " Page-title: " 
-                    userData += pageTitle
+                    
+                    #pageTitle = unicode(p.find(".//title").text).encode("utf-8")
+                    pageT = p.find(".//title")
+                    if (pageT != None):
+                        pageTitle = unicode(p.find(".//title").text).encode("ascii","ignore")
+                    if (pageTitle != None):
+                        userData += " Page-title: "
+                        userData += pageTitle
                 except urllib2.HTTPError, err:
                     if err.code == 404:
                         print "Page not found!"
@@ -101,6 +110,8 @@ class twitterListener(StreamListener):
                         print "Error:", err.code
                 except urllib2.URLError, err:
                     print "URL error:", err.reason
+                except BadStatusLine:
+                    print "Could not fetch URL"
         
             tweetcnt += 1
             print 'Tweet:', tweetcnt, ' F.size = ', f.tell(), ' on file:', filecnt 
