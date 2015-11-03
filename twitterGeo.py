@@ -13,7 +13,7 @@ import threading
 import time
 
 #arguments
-fileName = str(sys.argv[1])
+dirName = str(sys.argv[1])
 '''
 boundLat1 = float(sys.argv[2])
 boundLong1 = float(sys.argv[3])
@@ -28,10 +28,12 @@ consumer_key = "8uzP5HaulOr2a5z9WUOiegkqf"
 consumer_secret = "DpfkvmXmcy23PReWBVZEUziFRSjo9ZxClMGY6MIpiTmtajl8cS"
 
 filecnt = 0
-outputFile = fileName
-outputFile += str(filecnt)
-outputFile += '.txt'
-f = open(outputFile, 'w')
+outputPath = dirName
+outputPath += '/'
+outputPath += 'twitter_data'
+outputPath += str(filecnt)
+outputPath += '.txt'
+f = open(outputPath, 'w')
 hashtags = []
 
 
@@ -47,10 +49,12 @@ class twitterListener(StreamListener):
         if (f.tell() >= 10485760):
             f.close()
             filecnt += 1
-            outputFile = fileName
-            outputFile += str(filecnt)
-            outputFile += '.txt'
-            f = open(outputFile, 'w')
+            outputPath = dirName
+            outputPath += '/'
+            outputPath += 'twitter_data'
+            outputPath += str(filecnt)
+            outputPath += '.txt'
+            f = open(outputPath, 'w')
 
         
         decoded = json.loads(data)  
