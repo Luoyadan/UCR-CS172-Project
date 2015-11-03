@@ -12,8 +12,8 @@ from lxml.html import parse
 
 
 #arguments
-dirName = str(sys.argv[1]) #data path
-numTweets = int(sys.argv[2]) #num of tweets 
+dirName = str(sys.argv[2]) #data path
+numTweets = int(sys.argv[1]) #num of tweets 
 
 #twitter credentials
 access_token = "4071886992-bnHpHdKy7yOJVrnotHFs5APG1QC4gurgi9Gc5LU"
