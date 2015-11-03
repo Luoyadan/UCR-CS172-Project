@@ -9,8 +9,6 @@ import json
 import urllib2
 from lxml.html import parse
 
-import threading
-import time
 
 #arguments
 dirName = str(sys.argv[1])
@@ -27,6 +25,7 @@ access_token_secret = "zfR4t6WM2Zmf5185uW3aJ6xxqnth8lwZYMoBNtvsPypDR"
 consumer_key = "8uzP5HaulOr2a5z9WUOiegkqf"
 consumer_secret = "DpfkvmXmcy23PReWBVZEUziFRSjo9ZxClMGY6MIpiTmtajl8cS"
 
+tweetcnt = 0
 filecnt = 0
 outputPath = dirName
 outputPath += '/'
@@ -44,6 +43,7 @@ class twitterListener(StreamListener):
     def on_data(self, data):
         global f
         global filecnt
+        global tweetcnt
 
         #Create a new text file every 10MB
         if (f.tell() >= 10485760):
@@ -61,6 +61,7 @@ class twitterListener(StreamListener):
 
         #Checks geo enable and if there is coordinates
         if unicode(decoded['user']['geo_enabled']).encode("ascii","ignore") == "True" and unicode(decoded['coordinates']).encode("ascii","ignore") != "None":
+
             username = unicode(decoded['user']['screen_name']).encode("ascii","ignore")  #gets username
             userTweet = unicode(decoded['text']).encode("ascii","ignore") #gets tweet
             userTweetTime = unicode(decoded['created_at']) #gets timestamp
@@ -97,8 +98,9 @@ class twitterListener(StreamListener):
                         print "Error:", err.code
                 except urllib2.URLError, err:
                     print "URL error:", err.reason
-
-            print 'F.size = ', f.tell()    
+        
+            tweetcnt += 1
+            print 'Tweet:', tweetcnt, ' F.size = ', f.tell(), ' on file:', filecnt 
             userData += "\n"
             print userData
             f.write(userData)
@@ -110,7 +112,7 @@ class twitterListener(StreamListener):
 
 
 if __name__ == '__main__':
-
+    
     #Authentication and connection to twitter API
     l = twitterListener()
     auth = OAuthHandler(consumer_key, consumer_secret)
@@ -119,6 +121,7 @@ if __name__ == '__main__':
 
     #-122.75,36.8,-121.75,37.8 SF
     #stream.filter(locations=[boundLong1,boundLat1,boundLong2,boundLat2], languages=["en"]) #filter tweets to be in the San Francisco area
-    stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
+    #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
+    stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
 
     f.close()
