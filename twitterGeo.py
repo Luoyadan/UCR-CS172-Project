@@ -12,13 +12,8 @@ from lxml.html import parse
 
 
 #arguments
-dirName = str(sys.argv[1])
-'''
-boundLat1 = float(sys.argv[2])
-boundLong1 = float(sys.argv[3])
-boundLat2 = float(sys.argv[4])
-boundLong2 = float(sys.argv[5])
-'''
+dirName = str(sys.argv[1]) #data path
+numTweets = int(sys.argv[2]) #num of tweets 
 
 #twitter credentials
 access_token = "4071886992-bnHpHdKy7yOJVrnotHFs5APG1QC4gurgi9Gc5LU"
@@ -44,6 +39,11 @@ class twitterListener(StreamListener):
         global f
         global filecnt
         global tweetcnt
+
+        #checks num of tweet parameter
+        if tweetcnt >= numTweets and numTweets != 0:
+            f.close()
+            sys.exit()
 
         #Ends when files reach 5GB in total size
         if (filecnt >= 500):
@@ -133,8 +133,6 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
 
-    #-122.75,36.8,-121.75,37.8 SF
-    #stream.filter(locations=[boundLong1,boundLat1,boundLong2,boundLat2], languages=["en"]) #filter tweets to be in the San Francisco area
     #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
     stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
 
