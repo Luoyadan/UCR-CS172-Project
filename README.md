@@ -5,6 +5,11 @@ Licensing Information: MIT
 ---
 Project source can be downloaded from https://github.com/khuan013/CS172-Crawler.git
 
+Author & Contributor List
+----
+Kenneth Huang
+Tien Tran
+
 
 Overview
 -------
