@@ -13,11 +13,12 @@ This application uses the Twitter Streaming API to collect geolocated tweets and
 
 Instructions on how to deploy the system
 -------
-In order to run the program, you must have 
 
-*Python 2.7
-*Tweepy Twitter API library installed.
-*lxml 
+In order to run the program, you must have 
+---
+* Python 2.7
+* Tweepy Twitter API library installed.
+* lxml 
 
 Download the repository from https://github.com/khuan013/CS172-Crawler.git
 
