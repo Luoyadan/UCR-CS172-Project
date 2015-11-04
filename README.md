@@ -14,8 +14,8 @@ This application uses the Twitter Streaming API to collect geolocated tweets and
 Instructions on how to deploy the system
 -------
 
-In order to run the program, you must have 
----
+In order to run the program, you must have: 
+
 * Python 2.7
 * Tweepy Twitter API library installed.
 * lxml 
