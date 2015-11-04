@@ -7,8 +7,8 @@ Project source can be downloaded from https://github.com/khuan013/CS172-Crawler.
 
 Author & Contributor List
 ----
-Kenneth Huang
-Tien Tran
+* Kenneth Huang
+* Tien Tran
 
 
 Overview
