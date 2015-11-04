@@ -25,6 +25,7 @@ If on Unix/Linux, run the crawler.sh shellscript, and pass the number of tweets 
 By default, the files are placed in /data and number of tweets are not limited. 
 
 Examples:
+
 1. ./crawler.sh <num-tweets> <output-dir> 
 2. ./crawler.sh <num-tweets>
 3. ./crawler.sh 
