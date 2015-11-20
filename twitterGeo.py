@@ -16,10 +16,10 @@ dirName = str(sys.argv[2]) #data path
 numTweets = int(sys.argv[1]) #num of tweets 
 
 #twitter credentials
-access_token = "4071886992-bnHpHdKy7yOJVrnotHFs5APG1QC4gurgi9Gc5LU"
-access_token_secret = "zfR4t6WM2Zmf5185uW3aJ6xxqnth8lwZYMoBNtvsPypDR"
-consumer_key = "8uzP5HaulOr2a5z9WUOiegkqf"
-consumer_secret = "DpfkvmXmcy23PReWBVZEUziFRSjo9ZxClMGY6MIpiTmtajl8cS"
+access_token = "2585435621-zr2ojDoppuuDFnzN8UhFtKVgcNlCfMWyzyzfa5y"
+access_token_secret = "fh8B8I82kNo0bPg4flmD8uMAMNw6Ec4bK2ecQT4Aemlzv"
+consumer_key = "8IuNWIYCRXVOgQubHjNv79Xrz"
+consumer_secret = "TKr8paciYE1BhcVCiap0hPtwPo0z4tiQc8TUw850ylFjeRDWQv"
 
 tweetcnt = 0
 filecnt = 0
@@ -28,7 +28,7 @@ outputPath += '/'
 outputPath += 'twitter_data'
 outputPath += str(filecnt)
 outputPath += '.txt'
-f = open(outputPath, 'w')
+f = open(outputPath, 'a')
 chkFlag = True
 
 
@@ -43,24 +43,28 @@ class twitterListener(StreamListener):
 
         #checks num of tweet parameter
         if tweetcnt >= numTweets and numTweets != 0:
+            print "first"
             chkFlag = False
             return False
 
         #Ends when files reach 5GB in total size
         if (filecnt >= 500):
+            print "filecnt"
             chkFlag = False
             return False
 
         #Create a new text file every 10MB
         if (f.tell() >= 10485760):
+            print "last"
             f.close()
+            chkFlag= True
             filecnt += 1
             outputPath = dirName
             outputPath += '/'
             outputPath += 'twitter_data'
             outputPath += str(filecnt)
             outputPath += '.txt'
-            f = open(outputPath, 'w')
+            f = open(outputPath, 'a')
 
         
         decoded = json.loads(data)  
@@ -128,17 +132,17 @@ class twitterListener(StreamListener):
 
 
 if __name__ == '__main__':
-    
-    #Authentication and connection to twitter API
-    l = twitterListener()
-    auth = OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    stream = Stream(auth, l)
 
     while chkFlag != False:
         try:
+            #Authentication and connection to twitter API
+            l = twitterListener()
+            auth = OAuthHandler(consumer_key, consumer_secret)
+            auth.set_access_token(access_token, access_token_secret)
+            stream = Stream(auth, l)
+
             #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
             stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
         except:
-            continue
+            pass
     f.close()
