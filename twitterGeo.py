@@ -78,12 +78,12 @@ class twitterListener(StreamListener):
             userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location as per profile, not of the specific tweet
             userCoords = unicode(decoded['coordinates']).encode("ascii","ignore") #gets coordinates, will be 'None' if they have disable location services
             userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")#get URLS 
-            userData = "Date:" + userTweetTime +  " Coords: " + userCoords[36:-1] + " @" + username + ": " + userTweet  
+            userData = "Date:" + userTweetTime +  " Coords:" + userCoords[36:-1] + " User:" + username + " Text:" + userTweet  
 
             #Loops through the list of hashtags and adds them to userData
             userHashtags = decoded['entities']['hashtags']
             if (userHashtags != "[]"):
-                userData += " Hashtags: "
+                userData += " Hashtags:"
                 tmp = decoded['text']
                 for Hashtags in userHashtags:
                     userHashtags = unicode(Hashtags['text']).encode("ascii","ignore")
@@ -92,7 +92,7 @@ class twitterListener(StreamListener):
             #url
             if userURLS != "[]":
                 expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii","ignore")
-                userData += " URL: "
+                userData += " URL:"
                 userData += expanded_url
                 pageTitle = None
 
@@ -105,7 +105,7 @@ class twitterListener(StreamListener):
                     if (pageT != None):
                         pageTitle = unicode(p.find(".//title").text).encode("ascii","ignore")
                     if (pageTitle != None):
-                        userData += " Page-title: "
+                        userData += " Title:"
                         userData += pageTitle
                 except urllib2.HTTPError, err:
                     if err.code == 404:
@@ -143,6 +143,6 @@ if __name__ == '__main__':
 
             #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
             stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
-        except:
+        except Exception:
             pass
     f.close()
