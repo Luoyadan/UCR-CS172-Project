@@ -16,10 +16,10 @@ dirName = str(sys.argv[2]) #data path
 numTweets = int(sys.argv[1]) #num of tweets 
 
 #twitter credentials
-access_token = "2585435621-zr2ojDoppuuDFnzN8UhFtKVgcNlCfMWyzyzfa5y"
-access_token_secret = "fh8B8I82kNo0bPg4flmD8uMAMNw6Ec4bK2ecQT4Aemlzv"
-consumer_key = "8IuNWIYCRXVOgQubHjNv79Xrz"
-consumer_secret = "TKr8paciYE1BhcVCiap0hPtwPo0z4tiQc8TUw850ylFjeRDWQv"
+access_token = "4072411213-MIHyA7ATFwJoDfqOH90ocaGzhiGjkVkdyT3zjQq"
+access_token_secret = "zu09sH6JnHJOsUDNKrHbcVT07SpRDA70xlIrgEAmNttZv"
+consumer_key = "pDgshnYmEZ9JuVXdRF0n0VJ4c"
+consumer_secret = "jOEqRdcOjExLuDcHY59sC6IQMly3k1QHFRooSxgJGR5iYY30x9"
 
 tweetcnt = 0
 filecnt = 0
@@ -80,21 +80,22 @@ class twitterListener(StreamListener):
             userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")#get URLS 
             userData = "Date:" + userTweetTime +  " Coords:" + userCoords[36:-1] + " User:" + username + " Text:" + userTweet  
 
+           
+            userData += " Hashtags:"
             #Loops through the list of hashtags and adds them to userData
             userHashtags = decoded['entities']['hashtags']
             if (userHashtags != "[]"):
-                userData += " Hashtags:"
                 tmp = decoded['text']
                 for Hashtags in userHashtags:
                     userHashtags = unicode(Hashtags['text']).encode("ascii","ignore")
                     userData += userHashtags + " "
             
             #url
+            pageTitle = None
+            userData += " URL:"
             if userURLS != "[]":
                 expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii","ignore")
-                userData += " URL:"
                 userData += expanded_url
-                pageTitle = None
 
                 try:
                     page = urllib2.urlopen(expanded_url)
@@ -104,9 +105,6 @@ class twitterListener(StreamListener):
                     pageT = p.find(".//title")
                     if (pageT != None):
                         pageTitle = unicode(p.find(".//title").text).encode("ascii","ignore")
-                    if (pageTitle != None):
-                        userData += " Title:"
-                        userData += pageTitle
                 except urllib2.HTTPError, err:
                     if err.code == 404:
                         print "Page not found!"
@@ -118,7 +116,12 @@ class twitterListener(StreamListener):
                     print "URL error:", err.reason
                 except BadStatusLine:
                     print "Could not fetch URL"
-        
+       
+            if (pageTitle != None): 
+                userData += " Title:"
+                userData += pageTitle
+            
+            
             tweetcnt += 1
             print 'Tweet:', tweetcnt, ' F.size = ', f.tell(), ' on file:', filecnt 
             userData += "\n"
@@ -145,4 +148,5 @@ if __name__ == '__main__':
             stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
         except Exception:
             pass
+    
     f.close()
