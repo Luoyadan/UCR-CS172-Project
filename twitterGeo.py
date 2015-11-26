@@ -115,8 +115,8 @@ class twitterListener(StreamListener):
             except BadStatusLine:
                 print "Could not fetch URL"
        
-        if (pageTitle != None): 
-            userData += " Title:"
+        userData += " Title:"
+        if (pageTitle != None):
             userData += pageTitle
             
             
