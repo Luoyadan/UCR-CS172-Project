@@ -69,64 +69,62 @@ class twitterListener(StreamListener):
         
         decoded = json.loads(data)  
 
-        #Checks geo enable and if there is coordinates
-        if unicode(decoded['user']['geo_enabled']).encode("ascii","ignore") == "True" and unicode(decoded['coordinates']).encode("ascii","ignore") != "None":
 
-            username = unicode(decoded['user']['screen_name']).encode("ascii","ignore")  #gets username
-            userTweet = unicode(decoded['text']).encode("ascii","ignore") #gets tweet
-            userTweetTime = unicode(decoded['created_at']) #gets timestamp
-            userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location as per profile, not of the specific tweet
-            userCoords = unicode(decoded['coordinates']).encode("ascii","ignore") #gets coordinates, will be 'None' if they have disable location services
-            userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")#get URLS 
-            userData = "Date:" + userTweetTime +  " Coords:" + userCoords[36:-1] + " User:" + username + " Text:" + userTweet  
+        username = unicode(decoded['user']['screen_name']).encode("ascii","ignore")  #gets username
+        userTweet = unicode(decoded['text']).encode("ascii","ignore") #gets tweet
+        userTweetTime = unicode(decoded['created_at']) #gets timestamp
+        userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location as per profile, not of the specific tweet
+        userCoords = unicode(decoded['coordinates']).encode("ascii","ignore") #gets coordinates, will be 'None' if they have disable location services
+        userURLS = unicode(decoded['entities']['urls']).encode("ascii","ignore")#get URLS 
+        userData = "Date:" + userTweetTime +  " Coords:" + userCoords[36:-1] + " User:" + username + " Text:" + userTweet  
 
            
-            userData += " Hashtags:"
+        userData += " Hashtags:"
             #Loops through the list of hashtags and adds them to userData
-            userHashtags = decoded['entities']['hashtags']
-            if (userHashtags != "[]"):
-                tmp = decoded['text']
-                for Hashtags in userHashtags:
-                    userHashtags = unicode(Hashtags['text']).encode("ascii","ignore")
-                    userData += userHashtags + " "
+        userHashtags = decoded['entities']['hashtags']
+        if (userHashtags != "[]"):
+            tmp = decoded['text']
+            for Hashtags in userHashtags:
+                userHashtags = unicode(Hashtags['text']).encode("ascii","ignore")
+                userData += userHashtags + " "
             
-            #url
-            pageTitle = None
-            userData += " URL:"
-            if userURLS != "[]":
-                expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii","ignore")
-                userData += expanded_url
+        #url
+        pageTitle = None
+        userData += " URL:"
+        if userURLS != "[]":
+            expanded_url = unicode(decoded['entities']['urls'][0]['expanded_url']).encode("ascii","ignore")
+            userData += expanded_url
 
-                try:
-                    page = urllib2.urlopen(expanded_url)
-                    p = parse(page)
+            try:
+                page = urllib2.urlopen(expanded_url)
+                p = parse(page)
                     
-                    #pageTitle = unicode(p.find(".//title").text).encode("utf-8")
-                    pageT = p.find(".//title")
-                    if (pageT != None):
-                        pageTitle = unicode(p.find(".//title").text).encode("ascii","ignore")
-                except urllib2.HTTPError, err:
-                    if err.code == 404:
-                        print "Page not found!"
-                    elif err.code == 403:
-                        print "Access denied!"
-                    else:
-                        print "Error:", err.code
-                except urllib2.URLError, err:
-                    print "URL error:", err.reason
-                except BadStatusLine:
-                    print "Could not fetch URL"
+                #pageTitle = unicode(p.find(".//title").text).encode("utf-8")
+                pageT = p.find(".//title")
+                if (pageT != None):
+                    pageTitle = unicode(p.find(".//title").text).encode("ascii","ignore")
+            except urllib2.HTTPError, err:
+                if err.code == 404:
+                    print "Page not found!"
+                elif err.code == 403:
+                    print "Access denied!"
+                else:
+                    print "Error:", err.code
+            except urllib2.URLError, err:
+                print "URL error:", err.reason
+            except BadStatusLine:
+                print "Could not fetch URL"
        
-            if (pageTitle != None): 
-                userData += " Title:"
-                userData += pageTitle
+        if (pageTitle != None): 
+            userData += " Title:"
+            userData += pageTitle
             
             
-            tweetcnt += 1
-            print 'Tweet:', tweetcnt, ' F.size = ', f.tell(), ' on file:', filecnt 
-            userData += "\n"
-            print userData
-            f.write(userData)
+        tweetcnt += 1
+        print 'Tweet:', tweetcnt, ' F.size = ', f.tell(), ' on file:', filecnt 
+        userData += "\n"
+        print userData
+        f.write(userData)
 
         return True
 
