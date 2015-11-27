@@ -9,7 +9,9 @@ import json
 import urllib2
 from httplib import BadStatusLine
 from lxml.html import parse
-
+import time
+import math
+import re
 
 #arguments
 dirName = str(sys.argv[2]) #data path
@@ -72,7 +74,7 @@ class twitterListener(StreamListener):
 
         username = unicode(decoded['user']['screen_name']).encode("ascii","ignore")  #gets username
         userTweet = unicode(decoded['text']).encode("ascii","ignore") #gets tweet
-        userTweet = userTweet.replace('\n', ' ').replace('\t', '') #replaces new lines
+        userTweet = userTweet.replace('\n', ' ').replace('\t', '').replace('\r', '') #replaces new lines
         userTweetTime = unicode(decoded['created_at']) #gets timestamp
         userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location as per profile, not of the specific tweet
         userCoords = unicode(decoded['coordinates']).encode("ascii","ignore") #gets coordinates, will be 'None' if they have disable location services
@@ -118,7 +120,8 @@ class twitterListener(StreamListener):
        
         userData += " Title:"
         if (pageTitle != None):
-            re.sub('[^A-Za-z0-9]+', '', pageTitle)
+            #pageTitle.replace('\n', '').replace('\r', ' ').replace('\t', '')
+            pageTitle = re.sub('[^A-Za-z0-9]+', ' ', pageTitle)
             userData += pageTitle
             
             
@@ -132,10 +135,15 @@ class twitterListener(StreamListener):
 
     def on_error(self, status):
         print status
+        if (status == 420):
+            print "FOUND 420!!!"
+            return False
+           
 
 
 if __name__ == '__main__':
 
+    wait_counter = 0
     while chkFlag != False:
         try:
             #Authentication and connection to twitter API
@@ -146,7 +154,14 @@ if __name__ == '__main__':
 
             #stream.filter(locations=[-121.32,32.64,-113.76,36.09], languages=["en"]) #filter tweets to be in the Southern Califnornia area
             stream.filter(locations=[-123.40,35.59,-66.79,48.25], languages=["en"]) 
-        except Exception:
+        except Exception, e:
+            print "Exception occured: "
+            print e
+            if (e == 420):
+                waittime = 60;
+                print "WAITING for " , waittime , " seconds..."
+                time.sleep(waittime)
+                print "Going"
             pass
     
     f.close()
