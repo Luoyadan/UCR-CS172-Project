@@ -117,6 +117,7 @@ class twitterListener(StreamListener):
        
         userData += " Title:"
         if (pageTitle != None):
+            pageTitle = pageTitle.replace('\n', '')
             userData += pageTitle
             
             
