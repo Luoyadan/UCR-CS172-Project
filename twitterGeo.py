@@ -16,10 +16,10 @@ dirName = str(sys.argv[2]) #data path
 numTweets = int(sys.argv[1]) #num of tweets 
 
 #twitter credentials
-access_token = "4072411213-MIHyA7ATFwJoDfqOH90ocaGzhiGjkVkdyT3zjQq"
-access_token_secret = "zu09sH6JnHJOsUDNKrHbcVT07SpRDA70xlIrgEAmNttZv"
-consumer_key = "pDgshnYmEZ9JuVXdRF0n0VJ4c"
-consumer_secret = "jOEqRdcOjExLuDcHY59sC6IQMly3k1QHFRooSxgJGR5iYY30x9"
+access_token = "794400235-KdRUNxANgh8hihIXEusBQ1KG56M69CnvbNqlVyZL"
+access_token_secret = "TeLtxZiP6rNG1NVFIZ4xlGXRCndr0plGpkBnGnwA2kkSA"
+consumer_key = "6qkJiouDjxgANzJHQ5bLZMyiI"
+consumer_secret = "gWRU7UlKAKJvUxy5HHPYotp1KrDewyHxpQkyCC55lqCsYQvCV1"
 
 tweetcnt = 0
 filecnt = 0
@@ -72,6 +72,7 @@ class twitterListener(StreamListener):
 
         username = unicode(decoded['user']['screen_name']).encode("ascii","ignore")  #gets username
         userTweet = unicode(decoded['text']).encode("ascii","ignore") #gets tweet
+        userTweet = userTweet.replace('\n', ' ').replace('\t', '') #replaces new lines
         userTweetTime = unicode(decoded['created_at']) #gets timestamp
         userLocation = unicode(decoded['user']['location']).encode("ascii","ignore") #gets location as per profile, not of the specific tweet
         userCoords = unicode(decoded['coordinates']).encode("ascii","ignore") #gets coordinates, will be 'None' if they have disable location services
@@ -117,7 +118,7 @@ class twitterListener(StreamListener):
        
         userData += " Title:"
         if (pageTitle != None):
-            pageTitle = pageTitle.replace('\n', '')
+            re.sub('[^A-Za-z0-9]+', '', pageTitle)
             userData += pageTitle
             
             
