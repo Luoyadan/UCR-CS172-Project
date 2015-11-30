@@ -44,39 +44,50 @@ public class MyLucene {
 	public static void main(String[] args) throws CorruptIndexException, IOException {
 		
 		
-		search("turkey", 10);
-		/*
+	
+		
 		if (args.length == 0) {
 		
 		//READ FROM FILES
 		BufferedReader reader = null;
         int count = 0;
+        int file_no = 0;
 		
         try {
-        	File file = new File("data/twitter_data0.txt");
-        	System.out.println("Reading from file '" + file + "'...");
-            reader = new BufferedReader(new FileReader(file));
+        	File file = new File("data/twitter_data"+file_no+".txt");
+        	
+        	while (file.exists()) {
+        	
+	        	System.out.println("Reading from file '" + file + "'...");
+	            reader = new BufferedReader(new FileReader(file));
+	            
+	            // Read every line in the file, and parse each tweet.
+	            for (String line; (line = reader.readLine()) != null; ) {
+	            	count++; //Count number of tweets
+	            	System.out.println("Tweets = " + count);
+	                Scanner s = new Scanner(line).useDelimiter("\\s*Date:\\s*|\\s*Coords:\\s*|\\s*User:\\s*|\\s*Text:\\s*|\\s*Hashtags:\\s*|\\s*URL:\\s*|\\s*Title:\\s*");
+	                String date = s.next();
+	                String coords = s.next();
+	                String user = s.next();
+	                String text = s.next();
+	                String hashtags = s.next();
+	                String url = s.next();
+	                String title = "";
+	                if (s.hasNext()) {
+	                	title = s.next();
+	                }
+	                
+	                //Declare tweet, and index it in Lucene
+	                TweetDoc tweet1 = new TweetDoc(date, coords, user, text, hashtags, url, title);                
+	                index(tweet1);
+	            }
+	            
+	            reader.close();
+	            System.out.println("Current number of tweets = " + count);
+	            file_no++;
+	            file = new File("data/twitter_data"+file_no+".txt");
             
-            // Read every line in the file, and parse each tweet.
-            for (String line; (line = reader.readLine()) != null; ) {
-            	count++; //Count number of tweets
-            	System.out.println("Tweets = " + count);
-                Scanner s = new Scanner(line).useDelimiter("\\s*Date:\\s*|\\s*Coords:\\s*|\\s*User:\\s*|\\s*Text:\\s*|\\s*Hashtags:\\s*|\\s*URL:\\s*|\\s*Title:\\s*");
-                String date = s.next();
-                String coords = s.next();
-                String user = s.next();
-                String text = s.next();
-                String hashtags = s.next();
-                String url = s.next();
-                String title = "";
-                if (s.hasNext()) {
-                	title = s.next();
-                }
-                
-                //Declare tweet, and index it in Lucene
-                TweetDoc tweet1 = new TweetDoc(date, coords, user, text, hashtags, url, title);                
-                index(tweet1);
-            }
+        	}
         } 
         catch (IOException e) {
             e.printStackTrace();
@@ -94,16 +105,9 @@ public class MyLucene {
         
 		}
 		
-		//SEARCH INDEX
-		else {
-			System.out.println("SEARCHING");
-			String query = args[0];
-			System.out.println(query);
-			
-			search(query, 5);
-		}
 		
-		*/
+		
+		
 	}
 		
     
