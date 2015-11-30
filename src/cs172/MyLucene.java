@@ -78,7 +78,7 @@ public class MyLucene {
 	                }
 	                
 	                //Declare tweet, and index it in Lucene
-	                TweetDoc tweet1 = new TweetDoc(date, coords, user, text, hashtags, url, title);                
+	                TweetDoc tweet1 = new TweetDoc(date, coords, user, text, hashtags, url, title);    
 	                index(tweet1);
 	            }
 	            
@@ -126,6 +126,7 @@ public class MyLucene {
 			luceneDoc.add(new Field("hashtags", tweet.hashtags, Field.Store.YES, Field.Index.ANALYZED));
 			luceneDoc.add(new Field("link", tweet.link, Field.Store.YES, Field.Index.NO));			
 			luceneDoc.add(new Field("ptitle", tweet.ptitle, Field.Store.YES, Field.Index.ANALYZED));
+			luceneDoc.setBoost((float)2.0);
 			writer.addDocument(luceneDoc);			
 		} catch (Exception ex) {
 			ex.printStackTrace();
