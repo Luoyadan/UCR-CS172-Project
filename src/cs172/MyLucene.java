@@ -168,8 +168,9 @@ public class MyLucene {
 				String date = indexSearcher.doc(results.scoreDocs[i].doc).getFieldable("date").stringValue();
 				date = date.replace("+0000", "");
 				temp += ": " + indexSearcher.doc(results.scoreDocs[i].doc).getFieldable("text").stringValue();
-				temp += "<br/>" + date;
+				temp += "<br/>" + date + "    Score: " +  results.scoreDocs[i].score;;
 				System.out.println(indexSearcher.doc(results.scoreDocs[i].doc).getFieldable("text").stringValue());
+				System.out.println("score: " + results.scoreDocs[i].score);
 				returnTweets[i] = temp;
 			}
 			
