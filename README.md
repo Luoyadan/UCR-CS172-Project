@@ -41,6 +41,8 @@ Examples:
 
 Part 2 Indexing/Webpage (Java, JSP)
 
+[alt text](http://i.imgur.com/Dgc2T9L.png "Example")
+
 Instructions on how to deploy the system
 -------
 
