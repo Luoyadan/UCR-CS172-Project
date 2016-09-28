@@ -6,8 +6,8 @@ Project: Tweets Retrieval and Location
 
 Author & Contributor List
 ----
-* Yadan (Ada) Luo
-* Zhiba Su
+* **Yadan (Ada) Luo**
+* **Zhiba Su**
 * *Kenneth Huang*
 * *Tien Tran*
 
@@ -23,7 +23,11 @@ This application uses the Twitter Streaming API to collect geolocated tweets and
 In order to run the program, you must have: 
 
 * Python 2.7
+
 * Tweepy Twitter API library installed.
+
+  sudo pip install tweepy
+  
 * lxml 
 
 ####
