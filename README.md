@@ -1,7 +1,7 @@
 #UCR 2016FALL CS172 Information Retrieval
-##Project: Tweets Retrieval and Location
+Project: Tweets Retrieval and Location
 
-*Licensing Information: MIT*
+*Licensing Information: MIT*  
 *Project features finess but based on https://github.com/khuan013/CS172-Crawler.git*
 
 Author & Contributor List
