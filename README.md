@@ -8,8 +8,8 @@ Author & Contributor List
 ----
 * Yadan (Ada) Luo
 * Zhiba Su
-* Kenneth Huang
-* Tien Tran
+* *Kenneth Huang*
+* *Tien Tran*
 
 
 ##Overview
@@ -18,8 +18,7 @@ Author & Contributor List
 
 This application uses the Twitter Streaming API to collect geolocated tweets and stores them in text files of 10MB each.
 
-Instructions on how to deploy the system
-----
+####Instructions on how to deploy the system
 
 In order to run the program, you must have: 
 
