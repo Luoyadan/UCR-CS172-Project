@@ -1,12 +1,15 @@
-Twitter Search Engine
+#UCR 2016FALL CS172 Information Retrieval
+##Project: Tweets Retrieval and Location
 ====
 
 Licensing Information: MIT
 ---
-Project source can be downloaded from https://github.com/khuan013/CS172-Crawler.git
+*Project features finess but based on https://github.com/khuan013/CS172-Crawler.git*
 
 Author & Contributor List
 ----
+* Yadan (Ada) Luo
+* Zhiba Su
 * Kenneth Huang
 * Tien Tran
 
@@ -28,8 +31,9 @@ In order to run the program, you must have:
 * Tweepy Twitter API library installed.
 * lxml 
 
+####
 Download the repository from https://github.com/khuan013/CS172-TwitterSearch.git
-
+####
 If on Unix/Linux, run the crawler.sh shellscript, and pass the number of tweets you want to search (if the number is 0, the crawler will go on untill it reaches 5 GB in data) and output directory name, which will execute the Python program. 
 
 By default, the files are placed in /data and number of tweets are not limited. 
