@@ -13,9 +13,8 @@ Author & Contributor List
 
 
 Overview
--------
 
-Part 1 Twitter Crawler (Python)
+###Part 1 Twitter Crawler (Python)
 ---
 
 This application uses the Twitter Streaming API to collect geolocated tweets and stores them in text files of 10MB each.
