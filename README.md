@@ -25,9 +25,9 @@ In order to run the program, you must have:
 * Python 2.7
 
 * Tweepy Twitter API library installed.
-
+```
   sudo pip install tweepy
-  
+```  
 * lxml 
 
 ####
